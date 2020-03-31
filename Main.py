@@ -62,10 +62,35 @@ class Main:
     fourier = FourierTransform(signalValues)
 
     DFTList = fourier.DFT()
-    print(DFTList)
     FFTList = fourier.FFT()
-    print(FFTList)
 
-    plt.plot([x for x in range(N)], DFTList, color='b')
-    plt.plot([x for x in range(N)], FFTList, color='r')
+    NVariedList = []
+    timeDFTResult = []
+    timeFFTResult = []
+
+    for M in range(11):
+        NVaried = 2**M
+        NVariedList.append(NVaried)
+
+        objVaried = RandomSignal(n, w, NVaried)
+        pointsVaried = objVaried.generete_signal()
+        signalValuesVaried = []
+
+        for i in range(len(pointsVaried)):
+            signalValuesVaried.append(pointsVaried[i][1])
+
+        fourier = FourierTransform(signalValuesVaried)
+
+        timeDFTStart = perf_counter()
+        DFTListVaried = fourier.DFT()
+        timeDFTFinish = perf_counter()
+        timeDFTResult.append(timeDFTFinish - timeDFTStart)
+
+        timeFFTStart = perf_counter()
+        FFTListVaried = fourier.FFT()
+        timeFFTFinish = perf_counter()
+        timeFFTResult.append(timeFFTFinish - timeFFTStart)
+
+    plt.plot(NVariedList, timeDFTResult, color='b')
+    plt.plot(NVariedList, timeFFTResult, color='r')
     plt.show()
